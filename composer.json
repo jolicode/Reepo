@@ -1,0 +1,23 @@
+{
+    "name": "jolicode/reepo",
+    "description": "Abstraction of repository provider like GitHub, Redmine, Gitlab, ...",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joel Wurtz",
+            "email": "jwurtz@jolicode.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Joli\\Reepo\\": "src/",
+            "Joli\\Reepo\\Test": "tests/"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "~4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "~4.0.0"
+    }
+}
