@@ -11,13 +11,12 @@
     "autoload": {
         "psr-4": {
             "Joli\\Reepo\\": "src/",
-            "Joli\\Reepo\\Test": "tests/"
+            "Joli\\Reepo\\Test\\": "tests/"
         }
     },
     "require": {
         "guzzlehttp/guzzle": "~4.0",
-        "guzzlehttp/guzzle-services": "~0.1.0",
-        "guzzlehttp/command": "dev-master",
+        "guzzlehttp/guzzle-services": "dev-master",
         "symfony/options-resolver": "~2.4.0"
     },
     "require-dev": {
