@@ -8,12 +8,14 @@
 
 namespace Joli\Reepo\Provider\Github;
 
+use GuzzleHttp\Command\Guzzle\Description;
 use Joli\Reepo\Provider\ApiProvider;
 use Joli\Reepo\Provider\AuthenticationInterface;
 use Joli\Reepo\Provider\Commit;
 use Joli\Reepo\Provider\ProviderInterface;
 use Joli\Reepo\Provider\WebhookInterface;
 use Joli\Reepo\Repository\Repository;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class GithubProvider extends ApiProvider implements ProviderInterface, AuthenticationInterface, WebhookInterface
 {
@@ -25,7 +27,7 @@ class GithubProvider extends ApiProvider implements ProviderInterface, Authentic
      */
     public function getRepositories(array $filters = array())
     {
-        // TODO: Implement getRepositories() method.
+        return $this->client->getRepositories();
     }
 
     /**
@@ -66,5 +68,44 @@ class GithubProvider extends ApiProvider implements ProviderInterface, Authentic
     public function registerWebhook(Repository $repository, $webhookUrl, $event)
     {
         // TODO: Implement registerWebhook() method.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getDescription(array $options = array())
+    {
+        return new Description([
+            'baseUrl' => $options['base_url'],
+            'operations' => [
+                'getRepositories' => [
+                    'httpMethod' => 'GET',
+                    'uri' => '/users/'.$options['user'].'/repos',
+                    'responseModel' => 'getResponse'
+                ]
+            ],
+            'models' => [
+                'getResponse' => [
+                    'type' => 'object',
+                    'additionalProperties' => [
+                        'location' => 'json'
+                    ]
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function configureClientOptions(OptionsResolverInterface $options)
+    {
+        $options->setDefaults(array(
+            'base_url' => 'https://api.github.com',
+        ));
+
+        $options->setRequired(array(
+            'user'
+        ));
     }
 } 
