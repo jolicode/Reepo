@@ -12,6 +12,7 @@ class GithubProviderTest extends \PHPUnit_Framework_TestCase
         $provider     = new GithubProvider(array('user' => 'symfony'));
         $repositories = $provider->getRepositories();
 
-        var_dump($repositories[0]);
+        $this->assertGreaterThan(0, count($repositories));
+        $this->assertInstanceOf('Joli\Reepo\Repository\GitRepository', $repositories[0]);
     }
 } 

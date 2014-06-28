@@ -79,17 +79,9 @@ class GithubProvider extends ApiProvider implements ProviderInterface, Authentic
             'baseUrl' => $options['base_url'],
             'operations' => [
                 'getRepositories' => [
-                    'httpMethod' => 'GET',
-                    'uri' => '/users/'.$options['user'].'/repos',
-                    'responseModel' => 'getResponse'
-                ]
-            ],
-            'models' => [
-                'getResponse' => [
-                    'type' => 'object',
-                    'additionalProperties' => [
-                        'location' => 'json'
-                    ]
+                    'httpMethod'      => 'GET',
+                    'uri'             => '/users/'.$options['user'].'/repos',
+                    'serializer_type' => 'array<Joli\Reepo\Repository\GitRepository>'
                 ]
             ]
         ]);

@@ -3,8 +3,10 @@
 namespace Joli\Reepo\Provider;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Command\Event\ProcessEvent;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
 use GuzzleHttp\Command\Guzzle\Description;
+use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -17,12 +19,19 @@ abstract class ApiProvider
     {
         $client          = new Client();
         $optionsResolver = new OptionsResolver();
+        $serializer      = SerializerBuilder::create()->build();
 
         $this->configureClientOptions($optionsResolver);
 
         $description = $this->getDescription($optionsResolver->resolve($options));
 
         $this->client = new GuzzleClient($client, $description);
+        $this->client->getEmitter()->on('process', function (ProcessEvent $event) use($serializer) {
+            $config   = $event->getCommand()->getOperation()->toArray();
+            $type     = $config['serializer_type'];
+
+            $event->setResult($serializer->deserialize($event->getResponse()->getBody()->__toString(), $type, 'json'));
+        });
     }
 
     /**
