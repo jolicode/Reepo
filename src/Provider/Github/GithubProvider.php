@@ -15,6 +15,7 @@ use Joli\Reepo\Provider\Commit;
 use Joli\Reepo\Provider\ProviderInterface;
 use Joli\Reepo\Provider\WebhookInterface;
 use Joli\Reepo\Repository\Repository;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class GithubProvider extends ApiProvider implements ProviderInterface, AuthenticationInterface, WebhookInterface
@@ -27,7 +28,20 @@ class GithubProvider extends ApiProvider implements ProviderInterface, Authentic
      */
     public function getRepositories(array $filters = array())
     {
-        return $this->client->getRepositories();
+        $optionResolver = new OptionsResolver();
+
+        $this->configureGetRepositoriesOptions($optionResolver);
+        $options = $optionResolver->resolve($filters);
+
+        if ($options['type'] == 'organization') {
+            return $this->client->getOrgsRepositories(array(
+                'user' => $options['user']
+            ));
+        }
+
+        return $this->client->getRepositories(array(
+            'user' => $options['user']
+        ));
     }
 
     /**
@@ -35,7 +49,15 @@ class GithubProvider extends ApiProvider implements ProviderInterface, Authentic
      */
     public function getRepository($identifier)
     {
-        // TODO: Implement getRepository() method.
+        $optionResolver = new OptionsResolver();
+
+        $this->configureGetRepositoryOptions($optionResolver);
+        $options = $optionResolver->resolve($identifier);
+
+        return $this->client->getRepository(array(
+            'owner' => $options['owner'],
+            'repo'  => $options['repo']
+        ));
     }
 
     /**
@@ -78,10 +100,30 @@ class GithubProvider extends ApiProvider implements ProviderInterface, Authentic
         return new Description([
             'baseUrl' => $options['base_url'],
             'operations' => [
-                'getRepositories' => [
+                'getUserRepositories' => [
                     'httpMethod'      => 'GET',
-                    'uri'             => '/users/'.$options['user'].'/repos',
-                    'serializer_type' => 'array<Joli\Reepo\Repository\GitRepository>'
+                    'uri'             => '/users/{user}/repos',
+                    'serializer_type' => 'array<Joli\Reepo\Repository\GitRepository>',
+                    'parameters' => [
+                        'user' => ['type' => 'string', 'location' => 'uri', 'required' => true],
+                    ]
+                ],
+                'getOrgsRepositories' => [
+                    'httpMethod'      => 'GET',
+                    'uri'             => '/orgs/{user}/repos',
+                    'serializer_type' => 'array<Joli\Reepo\Repository\GitRepository>',
+                    'parameters' => [
+                        'user' => ['type' => 'string', 'location' => 'uri', 'required' => true],
+                    ]
+                ],
+                'getRepository' => [
+                    'httpMethod'      => 'GET',
+                    'uri'             => '/repos/{owner}/{repo}',
+                    'serializer_type' => 'Joli\Reepo\Repository\GitRepository',
+                    'parameters' => [
+                        'owner' => ['type' => 'string', 'location' => 'uri', 'required' => true],
+                        'repo'  => ['type' => 'string', 'location' => 'uri', 'required' => true],
+                    ]
                 ]
             ]
         ]);
@@ -95,9 +137,28 @@ class GithubProvider extends ApiProvider implements ProviderInterface, Authentic
         $options->setDefaults(array(
             'base_url' => 'https://api.github.com',
         ));
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected function configureGetRepositoriesOptions(OptionsResolverInterface $options)
+    {
+        $options->setDefaults(array(
+            'type' => 'user'
+        ));
+
+        $options->setRequired(array('user'));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function configureGetRepositoryOptions(OptionsResolverInterface $options)
+    {
         $options->setRequired(array(
-            'user'
+            'owner',
+            'repo'
         ));
     }
 } 
