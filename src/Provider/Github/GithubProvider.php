@@ -14,6 +14,7 @@ use Joli\Reepo\Provider\AuthenticationInterface;
 use Joli\Reepo\Provider\Commit;
 use Joli\Reepo\Provider\ProviderInterface;
 use Joli\Reepo\Provider\WebhookInterface;
+use Joli\Reepo\Repository\GithubRepository;
 use Joli\Reepo\Repository\Repository;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -65,7 +66,14 @@ class GithubProvider extends ApiProvider implements ProviderInterface, Authentic
      */
     public function getCommits(Repository $repository, array $filters = array())
     {
-        // TODO: Implement getCommits() method.
+        if (!$repository instanceof GithubRepository) {
+            throw new \UnexpectedValueException(sprintf("Repository must be an instance of GithubRepository, %s given", get_class($repository)));
+        }
+
+        return $this->client->getCommits(array(
+            'owner' => $repository->getOwner()->getLogin(),
+            'repo'  => $repository->getName()
+        ));
     }
 
     /**
@@ -103,7 +111,7 @@ class GithubProvider extends ApiProvider implements ProviderInterface, Authentic
                 'getUserRepositories' => [
                     'httpMethod'      => 'GET',
                     'uri'             => '/users/{user}/repos',
-                    'serializer_type' => 'array<Joli\Reepo\Repository\GitRepository>',
+                    'serializer_type' => 'array<Joli\Reepo\Repository\GithubRepository>',
                     'parameters' => [
                         'user' => ['type' => 'string', 'location' => 'uri', 'required' => true],
                     ]
@@ -111,7 +119,7 @@ class GithubProvider extends ApiProvider implements ProviderInterface, Authentic
                 'getOrgsRepositories' => [
                     'httpMethod'      => 'GET',
                     'uri'             => '/orgs/{user}/repos',
-                    'serializer_type' => 'array<Joli\Reepo\Repository\GitRepository>',
+                    'serializer_type' => 'array<Joli\Reepo\Repository\GithubRepository>',
                     'parameters' => [
                         'user' => ['type' => 'string', 'location' => 'uri', 'required' => true],
                     ]
@@ -119,7 +127,16 @@ class GithubProvider extends ApiProvider implements ProviderInterface, Authentic
                 'getRepository' => [
                     'httpMethod'      => 'GET',
                     'uri'             => '/repos/{owner}/{repo}',
-                    'serializer_type' => 'Joli\Reepo\Repository\GitRepository',
+                    'serializer_type' => 'Joli\Reepo\Repository\GithubRepository',
+                    'parameters' => [
+                        'owner' => ['type' => 'string', 'location' => 'uri', 'required' => true],
+                        'repo'  => ['type' => 'string', 'location' => 'uri', 'required' => true],
+                    ]
+                ],
+                'getCommits' => [
+                    'httpMethod'      => 'GET',
+                    'uri'             => '/repos/{owner}/{repo}/commits',
+                    'serializer_type' => 'array<Joli\Reepo\Repository\Commit>',
                     'parameters' => [
                         'owner' => ['type' => 'string', 'location' => 'uri', 'required' => true],
                         'repo'  => ['type' => 'string', 'location' => 'uri', 'required' => true],

@@ -13,7 +13,7 @@ class GithubProviderTest extends \PHPUnit_Framework_TestCase
         $repositories = $provider->getRepositories(array('user' => 'symfony', 'type' => 'organization'));
 
         $this->assertGreaterThan(0, count($repositories));
-        $this->assertInstanceOf('Joli\Reepo\Repository\GitRepository', $repositories[0]);
+        $this->assertInstanceOf('Joli\Reepo\Repository\GithubRepository', $repositories[0]);
     }
 
     public function testGetRepository()
@@ -21,6 +21,10 @@ class GithubProviderTest extends \PHPUnit_Framework_TestCase
         $provider     = new GithubProvider();
         $symfonyRepository = $provider->getRepository(array('owner' => 'symfony', 'repo' => 'symfony'));
 
-        $this->assertInstanceOf('Joli\Reepo\Repository\GitRepository', $symfonyRepository);
+        $this->assertInstanceOf('Joli\Reepo\Repository\GithubRepository', $symfonyRepository);
+
+        $commits = $provider->getCommits($symfonyRepository);
+
+        var_dump($commits);
     }
 } 

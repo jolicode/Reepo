@@ -4,7 +4,7 @@ namespace Joli\Reepo\Repository;
 
 use JMS\Serializer\Annotation\Type;
 
-abstract class Repository
+class GithubUser
 {
     /**
      * @Type("integer")
@@ -16,21 +16,15 @@ abstract class Repository
      * @Type("string")
      * @var string
      */
-    protected $name;
+    protected $login;
 
     /**
-     * @Type("string")
-     * @var string
-     */
-    protected $description;
-
-    /**
-     * Return name of repository
+     * Return login name of user
      *
      * @return string
      */
-    public function getName()
+    public function getLogin()
     {
-        return $this->name;
+        return $this->login;
     }
-}
+} 
