@@ -2,32 +2,31 @@
 
 namespace Joli\Reepo\Repository;
 
-use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation as Serializer;
 
 class Commit
 {
     /**
-     * @Type("string")
+     * @Serializer\Type("string")
      * @var string
      */
     protected $sha;
 
     /**
-     * @Type("string")
-     * @SerializedName("html_url")
+     * @Serializer\Type("string")
+     * @Serializer\SerializedName("html_url")
      * @var string
      */
     protected $url;
 
     /**
-     * @Type("Joli\Reepo\Repository\GithubUser")
+     * @Serializer\Type("Joli\Reepo\Repository\GithubUser")
      * @var \Joli\Reepo\Repository\GithubUser
      */
     protected $author;
 
     /**
-     * @Type("Joli\Reepo\Repository\GithubUser")
+     * @Serializer\Type("Joli\Reepo\Repository\GithubUser")
      * @var \Joli\Reepo\Repository\GithubUser
      */
     protected $committer;

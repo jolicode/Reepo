@@ -2,18 +2,18 @@
 
 namespace Joli\Reepo\Repository;
 
-use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation as Serializer;
 
 class GithubRepository extends Repository
 {
     /**
-     * @Type("string")
+     * @Serializer\Type("string")
      * @var string
      */
     protected $defaultBranch;
 
     /**
-     * @Type("Joli\Reepo\Repository\GithubUser")
+     * @Serializer\Type("Joli\Reepo\Repository\GithubUser")
      * @var \Joli\Reepo\Repository\GithubUser
      */
     protected $owner;

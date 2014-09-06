@@ -2,24 +2,24 @@
 
 namespace Joli\Reepo\Repository;
 
-use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation as Serializer;
 
 abstract class Repository
 {
     /**
-     * @Type("integer")
+     * @Serializer\Type("integer")
      * @var integer
      */
     protected $id;
 
     /**
-     * @Type("string")
+     * @Serializer\Type("string")
      * @var string
      */
     protected $name;
 
     /**
-     * @Type("string")
+     * @Serializer\Type("string")
      * @var string
      */
     protected $description;

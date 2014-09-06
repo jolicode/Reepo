@@ -2,18 +2,18 @@
 
 namespace Joli\Reepo\Repository;
 
-use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation as Serializer;
 
 class GithubUser
 {
     /**
-     * @Type("integer")
+     * @Serializer\Type("integer")
      * @var integer
      */
     protected $id;
 
     /**
-     * @Type("string")
+     * @Serializer\Type("string")
      * @var string
      */
     protected $login;
