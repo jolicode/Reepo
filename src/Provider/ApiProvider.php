@@ -5,7 +5,6 @@ namespace Joli\Reepo\Provider;
 use GuzzleHttp\Client;
 use GuzzleHttp\Command\Event\ProcessEvent;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
-use GuzzleHttp\Command\Guzzle\Description;
 use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;

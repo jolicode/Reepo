@@ -48,17 +48,9 @@ class GithubProvider extends ApiProvider implements ProviderInterface, Authentic
     /**
      * {@inheritDoc}
      */
-    public function getRepository($identifier)
+    public function getRepository($options)
     {
-        $optionResolver = new OptionsResolver();
-
-        $this->configureGetRepositoryOptions($optionResolver);
-        $options = $optionResolver->resolve($identifier);
-
-        return $this->client->getRepository(array(
-            'owner' => $options['owner'],
-            'repo'  => $options['repo']
-        ));
+        return $this->client->getRepository($options);
     }
 
     /**
@@ -166,16 +158,5 @@ class GithubProvider extends ApiProvider implements ProviderInterface, Authentic
         ));
 
         $options->setRequired(array('user'));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function configureGetRepositoryOptions(OptionsResolverInterface $options)
-    {
-        $options->setRequired(array(
-            'owner',
-            'repo'
-        ));
     }
 } 
