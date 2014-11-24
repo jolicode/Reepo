@@ -16,8 +16,8 @@
     },
     "require": {
         "guzzlehttp/guzzle": "~4.0",
-        "guzzlehttp/guzzle-services": "dev-master",
-        "symfony/options-resolver": "~2.5.0",
+        "guzzlehttp/guzzle-services": "~0.3.0",
+        "symfony/options-resolver": "~2.3",
         "jms/serializer": "~0.16"
     },
     "require-dev": {
